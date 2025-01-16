@@ -33,3 +33,29 @@ export const signup: RequestHandler = async (req, res, next) => {
   }
 };
 
+export const login: RequestHandler = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await UsersModel.findOne({ email }).select('+password');
+    if (!user) {
+      throw createHttpError(404, '此使用者不存在');
+    }
+
+    const checkPassword = await bcrypt.compare(password, user.password);
+    if (!checkPassword) {
+      throw createHttpError(400, '密碼錯誤');
+    }
+
+    const { password: _, ...result } = user.toObject();
+
+    res.send({
+      status: true,
+      token: generateToken({ userId: user.id }),
+      result
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
