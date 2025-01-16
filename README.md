@@ -19,7 +19,8 @@
 ## 🧭專案日記:
 
 - 2025/01/15 後端 - 完成基本MVC架構Express建立以及git、Dockerfile、prettier、env、ts初始化
-- 2025/01/16 後端 - 完成mongoDB連接、ERROR處理、user路由signup和其功能、建置userModal、jsonWebToken建置、user路由login和其功能
+- 2025/01/16 後端 - 完成mongoDB連接、ERROR處理、user路由signup和其功能、建置userModal、
+  jsonWebToken建置、user路由login和其功能、user路由check登入檢查
 
 ## 🔗後端程式設計架構圖
 

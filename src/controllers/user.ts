@@ -59,3 +59,11 @@ export const login: RequestHandler = async (req, res, next) => {
   }
 };
 
+export const check: RequestHandler = async (req, res) => {
+  const token = `${req.headers.authorization?.replace('Bearer ', '')}`;
+  res.send({
+    status: true,
+    token
+  });
+};
+
