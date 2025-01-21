@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import createHttpError from 'http-errors';
 import UsersModel from '@/models/userModel';
 import { generateToken } from '@/utils';
+import CartModal from '@/models/userCart';
 
 export const signup: RequestHandler = async (req, res, next) => {
   try {
@@ -21,12 +22,21 @@ export const signup: RequestHandler = async (req, res, next) => {
       address,
       password: await bcrypt.hash(password, 6)
     });
+
+    // 為使用者創建購物車
+    const shopcart = await CartModal.create({
+      userId: _result._id,
+      cartList: [],
+      totalPrice: 0
+    });
+
     const { password: _, ...result } = _result.toObject();
 
     res.send({
       status: true,
       token: generateToken({ userId: result.id }),
-      result
+      result,
+      shopcart
     });
   } catch (error) {
     next(error);
