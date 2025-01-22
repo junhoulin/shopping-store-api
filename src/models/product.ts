@@ -5,6 +5,7 @@ export interface IProduct extends Document {
   name: string;
   description: string;
   descriptionList: string[];
+  colorType: { color: string; count: number; status: number }[];
   imageUrl: string;
   imageUrlList: string[];
   areaInfo: string;
@@ -28,6 +29,19 @@ const productSchema = new Schema<IProduct>(
       {
         type: String,
         required: [true, 'descriptionList 未填寫']
+      }
+    ],
+    colorType: [
+      {
+        color: { type: String },
+        count: {
+          type: Number,
+          min: [1, 'quantity 至少為 1']
+        },
+        status: {
+          type: Number,
+          default: 1
+        }
       }
     ],
     imageUrl: {
