@@ -3,6 +3,7 @@ import validator from 'validator';
 
 export interface IProduct extends Document {
   name: string;
+  category: string;
   description: string;
   descriptionList: string[];
   colorType: { color: string; count: number; status: number }[];
@@ -20,6 +21,10 @@ const productSchema = new Schema<IProduct>(
     name: {
       type: String,
       required: [true, 'name 未填寫']
+    },
+    category: {
+      type: String,
+      required: [true, 'category 未填寫']
     },
     description: {
       type: String,
