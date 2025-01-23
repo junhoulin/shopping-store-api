@@ -24,6 +24,7 @@
 - 2025/01/17 後端 - 完成 admin路由addProduct以及user路由getProduct
 - 2025/01/21 後端 - 完成user的購物車API查詢、新增、刪除
 - 2025/01/21 後端 - 修正product、cart 資料結構 新增顏色，新增search、getOneProduct的API
+- 2025/01/23 後端 - 更新product產品結構
 
 ## 🔗後端程式設計架構圖
 

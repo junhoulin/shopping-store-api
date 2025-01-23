@@ -3,14 +3,14 @@ import validator from 'validator';
 
 export interface IProduct extends Document {
   name: string;
-  category: string;
+  category: string[];
   description: string;
   descriptionList: string[];
-  colorType: { color: string; count: number; status: number }[];
+  colorType: { color: string; info: { size: string; count: number; status: number }[] }[];
   imageUrl: string;
   imageUrlList: string[];
   areaInfo: string;
-  maxCount: number;
+  totalCount: number;
   price: number;
   // 可使用：1，已刪除：-1
   status: number;
@@ -22,10 +22,11 @@ const productSchema = new Schema<IProduct>(
       type: String,
       required: [true, 'name 未填寫']
     },
-    category: {
-      type: String,
-      required: [true, 'category 未填寫']
-    },
+    category: [
+      {
+        type: String
+      }
+    ],
     description: {
       type: String,
       required: [true, 'description 未填寫']
@@ -39,14 +40,19 @@ const productSchema = new Schema<IProduct>(
     colorType: [
       {
         color: { type: String },
-        count: {
-          type: Number,
-          min: [1, 'quantity 至少為 1']
-        },
-        status: {
-          type: Number,
-          default: 1
-        }
+        info: [
+          {
+            size: { type: String },
+            count: {
+              type: Number,
+              min: [0, '數量不能低於0']
+            },
+            status: {
+              type: Number,
+              default: 1
+            }
+          }
+        ]
       }
     ],
     imageUrl: {
@@ -75,9 +81,8 @@ const productSchema = new Schema<IProduct>(
       type: String,
       required: [true, 'areaInfo 未填寫']
     },
-    maxCount: {
+    totalCount: {
       type: Number,
-      required: [true, 'maxCount 未填寫'],
       validate: {
         validator(value: number) {
           return validator.isInt(`${value}`, { min: 1 });
@@ -99,6 +104,21 @@ const productSchema = new Schema<IProduct>(
     timestamps: true
   }
 );
+productSchema.pre('save', function (next) {
+  // 檢查 colorType 是否存在且為陣列
+  if (this.isModified('colorType') && Array.isArray(this.colorType)) {
+    // 計算 totalCount
+    const totalCount = this.colorType.reduce((sum, colorItem) => {
+      if (Array.isArray(colorItem.info)) {
+        return sum + colorItem.info.reduce((subSum, info) => subSum + (info.count || 0), 0);
+      }
+      return sum;
+    }, 0);
+    // 更新 totalCount
+    this.totalCount = totalCount;
+  }
+  next();
+});
 
 export default model('product', productSchema);
 

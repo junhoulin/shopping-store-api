@@ -37,18 +37,8 @@ export const getOneProduct: RequestHandler = async (req, res, next) => {
 
 export const createOneProduct: RequestHandler = async (req, res, next) => {
   try {
-    const {
-      name,
-      category,
-      description,
-      descriptionList,
-      colorType,
-      imageUrl,
-      imageUrlList,
-      areaInfo,
-      maxCount,
-      price
-    } = req.body;
+    const { name, category, description, descriptionList, colorType, imageUrl, imageUrlList, areaInfo, price } =
+      req.body;
     const result = await ProductModal.create({
       name,
       category,
@@ -58,7 +48,6 @@ export const createOneProduct: RequestHandler = async (req, res, next) => {
       imageUrl,
       imageUrlList,
       areaInfo,
-      maxCount,
       price
     });
     res.send({
