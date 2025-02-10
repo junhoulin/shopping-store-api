@@ -19,7 +19,7 @@ export const getCart: RequestHandler = async (req, res, next) => {
 
 export const addCart: RequestHandler = async (req, res, next) => {
   //計算總價並確定數字型別
-  const { productId, productName, color, quantity, price } = req.body;
+  const { productId, productName, color, size, quantity, price } = req.body;
   const quantityNum = Number(quantity);
   const priceNum = Number(price);
   const total = quantityNum * priceNum;
@@ -32,12 +32,14 @@ export const addCart: RequestHandler = async (req, res, next) => {
     const cart = await CartModal.findOne({ userId });
     if (cart) {
       // 購物車如果已經有相同產品再新增的話
-      const item = cart.cartList.find(item => item.productId === productId && item.color === color);
+      const item = cart.cartList.find(
+        item => item.productId === productId && item.color === color && item.size === size
+      );
       if (item) {
         item.quantity += quantityNum;
         item.total = item.quantity * item.price; // 更新總價
       } else {
-        cart.cartList.push({ productId, productName, color, quantity, price, total });
+        cart.cartList.push({ productId, productName, color, size, quantity, price, total });
       }
       cart.totalPrice = cart.cartList.reduce((acc, item) => acc + item.total, 0);
       await cart.save();
