@@ -17,7 +17,7 @@ export const verifyToken = (token: string) => {
   try {
     return jsonWebToken.verify(token, process.env.JWT_SECRET) as JwtPayload;
   } catch (error) {
-    throw createHttpError(403, '請重新登入');
+    throw createHttpError(403, '請先登入會員');
   }
 };
 
