@@ -19,7 +19,7 @@ export const getCart: RequestHandler = async (req, res, next) => {
 
 export const addCart: RequestHandler = async (req, res, next) => {
   //計算總價並確定數字型別
-  const { productId, productName, color, size, quantity, price } = req.body;
+  const { productId, productName, imageUrl, color, size, quantity, price } = req.body;
   const quantityNum = Number(quantity);
   const priceNum = Number(price);
   const total = quantityNum * priceNum;
@@ -39,7 +39,7 @@ export const addCart: RequestHandler = async (req, res, next) => {
         item.quantity += quantityNum;
         item.total = item.quantity * item.price; // 更新總價
       } else {
-        cart.cartList.push({ productId, productName, color, size, quantity, price, total });
+        cart.cartList.push({ productId, productName, imageUrl, color, size, quantity, price, total });
       }
       cart.totalPrice = cart.cartList.reduce((acc, item) => acc + item.total, 0);
       await cart.save();
@@ -82,14 +82,17 @@ export const updateCart: RequestHandler = async (req, res, next) => {
 };
 
 export const deleteCartItem: RequestHandler = async (req, res, next) => {
-  const { productId, color } = req.body;
+  const { productId, color, size } = req.body;
   const token = `${req.headers.authorization?.replace('Bearer ', '')}`;
   const user = verifyToken(token);
   const userId = user.userId;
   try {
     const cart = await CartModal.findOne({ userId });
     if (cart) {
-      cart.cartList = cart.cartList.filter(item => item.productId !== productId || item.color !== color);
+      cart.cartList = cart.cartList.filter(
+        item => !(item.productId === productId && item.color === color && item.size === size)
+      );
+      cart.totalPrice = cart.cartList.reduce((acc, item) => acc + item.total, 0);
       await cart.save();
       res.send({ status: true, cart });
     }

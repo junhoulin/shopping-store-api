@@ -5,6 +5,7 @@ export interface ICart extends Document {
   cartList: {
     productId: string;
     productName: string;
+    imageUrl: string;
     color: string;
     size: string;
     quantity: number;
@@ -25,6 +26,7 @@ const cartSchema = new Schema<ICart>(
       {
         productId: { type: String },
         productName: { type: String },
+        imageUrl: { type: String },
         color: { type: String },
         size: { type: String },
         quantity: {

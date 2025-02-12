@@ -4,6 +4,7 @@ import createHttpError from 'http-errors';
 import UsersModel from '@/models/userModel';
 import { generateToken } from '@/utils';
 import CartModal from '@/models/userCart';
+import { verifyToken } from '@/utils';
 
 export const signup: RequestHandler = async (req, res, next) => {
   try {
@@ -75,5 +76,21 @@ export const check: RequestHandler = async (req, res) => {
     status: true,
     token
   });
+};
+
+export const info: RequestHandler = async (req, res, next) => {
+  try {
+    const token = `${req.headers.authorization?.replace('Bearer ', '')}`;
+    const user = verifyToken(token);
+    const _id = user.userId;
+    const userInfo = await UsersModel.findOne({ _id });
+    res.send({
+      status: true,
+      token,
+      userInfo
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
