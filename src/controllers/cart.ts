@@ -54,7 +54,7 @@ export const addCart: RequestHandler = async (req, res, next) => {
 };
 
 export const updateCart: RequestHandler = async (req, res, next) => {
-  const { productId, quantity, color } = req.body; // 你可以傳遞商品ID和新的數量
+  const { productId, quantity, color, size } = req.body; // 你可以傳遞商品ID和新的數量
   const quantityNum = Number(quantity);
   const token = `${req.headers.authorization?.replace('Bearer ', '')}`;
   const user = verifyToken(token);
@@ -66,6 +66,7 @@ export const updateCart: RequestHandler = async (req, res, next) => {
       // 找到對應的商品並更新數量
       const item = cart.cartList.find(item => item.productId === productId && item.color === color);
       if (item) {
+        item.size = size;
         item.quantity = quantityNum;
         item.total = item.quantity * item.price; // 更新總價
       }
