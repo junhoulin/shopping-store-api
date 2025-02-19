@@ -4,6 +4,7 @@ import createHttpError from 'http-errors';
 import UsersModel from '@/models/userModel';
 import { generateToken } from '@/utils';
 import CartModal from '@/models/userCart';
+import OrderModal from '@/models/userOrder';
 import { verifyToken } from '@/utils';
 
 export const signup: RequestHandler = async (req, res, next) => {
@@ -31,13 +32,19 @@ export const signup: RequestHandler = async (req, res, next) => {
       totalPrice: 0
     });
 
+    const shoporder = await OrderModal.create({
+      userId: _result._id,
+      orderList: []
+    });
+
     const { password: _, ...result } = _result.toObject();
 
     res.send({
       status: true,
       token: generateToken({ userId: result.id }),
       result,
-      shopcart
+      shopcart,
+      shoporder
     });
   } catch (error) {
     next(error);
