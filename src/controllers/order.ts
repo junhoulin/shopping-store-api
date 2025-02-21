@@ -2,6 +2,7 @@ import { RequestHandler } from 'express';
 import OrderModal from '@/models/userOrder';
 import CartModal from '@/models/userCart';
 import { verifyToken } from '@/utils';
+import createHttpError from 'http-errors';
 
 export const getOrder: RequestHandler = async (req, res, next) => {
   const token = `${req.headers.authorization?.replace('Bearer ', '')}`;
@@ -46,6 +47,7 @@ export const addOrder: RequestHandler = async (req, res, next) => {
         bill: req.body.bill || '',
         isShip: false
       };
+      // 確保當 order 不存在時，newOrder 會自動生成 _id
       if (!order) {
         order = new OrderModal({ userId, orderList: [newOrder] });
       } else {
@@ -58,6 +60,63 @@ export const addOrder: RequestHandler = async (req, res, next) => {
       status: true,
       order
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const infoOrder: RequestHandler = async (req, res, next) => {
+  const { orderId } = req.body;
+  console.log(orderId);
+  try {
+    const token = `${req.headers.authorization?.replace('Bearer ', '')}`;
+    const user = verifyToken(token);
+    const userId = user.userId;
+    const userInfo = await OrderModal.findOne({ userId });
+    // @ts-ignore
+    const targetOrder = userInfo?.orderList.find(item => String(item._id) === orderId); // 強制轉換為字串
+    if (!targetOrder) {
+      throw createHttpError(404, '找不到訂單');
+    }
+    res.send({
+      status: true,
+      targetOrder
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updatOrder: RequestHandler = async (req, res, next) => {
+  const { orderId, isShip, payFinal } = req.body;
+  if (!orderId) {
+    throw createHttpError(404, '請輸入訂單編號');
+  }
+  try {
+    const token = `${req.headers.authorization?.replace('Bearer ', '')}`;
+    const user = verifyToken(token);
+    const userId = user.userId;
+    const userInfo = await OrderModal.findOne({ userId });
+
+    if (userInfo) {
+      // @ts-ignore
+      const targetOrder = userInfo?.orderList.find(item => String(item._id) === orderId);
+      if (!targetOrder) {
+        throw createHttpError(404, '找不到訂單');
+      } else {
+        if (isShip) {
+          targetOrder.isShip = isShip;
+        }
+        if (payFinal) {
+          targetOrder.payFinal = payFinal;
+        }
+        await userInfo.save();
+      }
+      res.send({
+        status: true,
+        targetOrder
+      });
+    }
   } catch (error) {
     next(error);
   }
