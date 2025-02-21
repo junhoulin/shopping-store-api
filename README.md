@@ -1,32 +1,42 @@
-## 🌝專案目標:
+# 購物商店 API
 
-## 🛠️使用技術:
+## 🌝 專案目標：
 
-## 📱套件使用:
+建立一個完整的電子商務平台後端，管理用戶帳戶、產品、訂單和購物車，並實現身份驗證、數據驗證和安全的密碼儲存。
 
-1.  npm install dotenv (.env存取套件)
-2.  npm install --save-dev prettier (讓編譯自動美化)
-    npx prettier --write . (執行美化)
-3.  npm i uuid (根據時間給一個獨立Key)
-4.  npm install @types/mongoose --save-dev (連結mongo)
-5.  npm install mongodb(ts連結mongo)
-6.  npm install jsonwebtoken (主要用於 JWT (JSON Web Token) 的生成和驗證)
-7.  npm install bcryptjs (加密庫，專門用於 密碼哈希（hashing），即將用戶密碼轉換為不可逆的哈希值。)
-8.  npm install --save-dev @types/bcryptjs
-9.  npm install http-errors (成 HTTP 錯誤，並且可以直接回傳符合 HTTP 規範的錯誤對象)
-10. npm install validator (資料驗證規則)
+## 🛠️ 使用技術：
 
-## 🧭專案日記:
+- **Node.js**：後端運行環境。
+- **Express**：Node.js 的 Web 框架。
+- **MongoDB**：用於儲存用戶和產品數據的資料庫。
+- **JWT（JSON Web Token）**：用於用戶身份驗證。
+- **Bcryptjs**：用於密碼哈希處理。
 
-- 2025/01/15 後端 - 完成基本MVC架構Express建立以及git、Dockerfile、prettier、env、ts初始化
-- 2025/01/16 後端 - 完成mongoDB連接、ERROR處理、user路由signup和其功能、建置userModal、
-  jsonWebToken建置、user路由login和其功能、user路由check登入檢查
-- 2025/01/17 後端 - 完成 admin路由addProduct以及user路由getProduct
-- 2025/01/21 後端 - 完成user的購物車API查詢、新增、刪除
-- 2025/01/21 後端 - 修正product、cart 資料結構 新增顏色，新增search、getOneProduct的API
-- 2025/02/10 後端 - 更新product產品結構，新增cartlist裡面的size欄位
-- 2025/02/10 後端 - 修正購物車資料結構、金額
-- 2025/02/19 後端 - 更新訂單API
+## 📱 已安裝套件：
 
-## 🔗後端程式設計架構圖
+1. `dotenv`：管理環境變數。
+2. `prettier`：自動格式化代碼。
+3. `uuid`：生成唯一識別碼。
+4. `@types/mongoose`：MongoDB 的 TypeScript 類型定義。
+5. `mongodb`：適用於 TypeScript 的 MongoDB 驅動程式。
+6. `jsonwebtoken`：生成和驗證 JWT。
+7. `bcryptjs`：用於密碼哈希處理。
+8. `http-errors`：處理 HTTP 錯誤。
+9. `validator`：驗證數據輸入。
+10. `cors`：啟用跨來源資源共享。
+
+## 🧭 專案日誌：
+
+- **2025/01/15**：建立 Express 框架，初始化 Docker、Prettier 和 TypeScript 配置。
+- **2025/01/16**：設置 MongoDB 連接、錯誤處理和用戶身份驗證路由（註冊、登入、令牌驗證）。
+- **2025/01/17**：完成產品管理路由（新增和檢索產品）。
+- **2025/01/21**：實現購物車 API，用於查詢、添加和刪除產品。
+- **2025/01/21**：增強產品和購物車數據結構，加入顏色和搜尋功能。
+- **2025/02/10**：更新產品和購物車數據結構。
+- **2025/02/19**：更新訂單 API，用於管理訂單。
+- **2025/02/21**：完成訂單狀態修改 API。
+
+## 🔗 後端架構：
+
+程式入口為 `src/index.js`。
 
